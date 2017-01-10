@@ -1,5 +1,5 @@
 
-var chordNames = ["G","Am","C"];
+var chordNames = ["G","Am","C", "Fmaj7"];
 
 var playing = false;
 
