@@ -1,52 +1,63 @@
-
-var chordNames = ["G","Am","C", "Fmaj7"];
-
+var chordNames = ["G","Am","C", "Fmaj7", "Em"];
 var playing = false;
+var line = "";
+var bar = 1;
+var beat = 1;
 
 $(document).ready(function(){
 
-  
-  
   var jam = $("pre").html();
-  
-  var line = "";
-  
+
   $(".ui").on("click","a",function(){
     if(playing) {
-      playing = false;
-      $(this).addClass("paused");
+      pause();
     } else {
-      playing = true;
-      $(this).removeClass("paused");
+      start();
     }
-    
+    return false;
   })
-  
+
   for(var i = 0; i < jam.length; i++) {
-  
     line = line + jam.charAt(i);
-    
     if(jam.charCodeAt(i) == 10) {
       addLine(line);
       line = "";
     }
-
   }
+
+  $(".chords").on("click",function(){
+    pause();
+
+
+    $(".chords.current").removeClass('current');
+    $(".chord.current").removeClass('current');
+
+    $(this).addClass("current");
+    bar = $(this).closest(".chords").find(".chord:first-child()").attr("bar");
+    beat = 1;
+
+  });
 
   setInterval(function(){
     if(playing) {
       tick();
     }
+  }, 306); // 306 is the original Riptide 
 
-  }, 306); //306
-
-  
 });
 
-var line = 1;
-var bar = 1;
-var beat = 1;
 
+function pause() {
+  playing = false;
+  $(".ui a").addClass("paused");
+}
+
+function start() {
+  playing = true;
+  $(".ui a").removeClass("paused");
+}
+
+var chordCount = 1;
 
 function addLine(line) {
 
@@ -65,8 +76,8 @@ function addLine(line) {
     var nextCharCode = line.charCodeAt(i+1) || false;
 
     if((thisCharCode != 32 && prevCharCode == 32) || thisCharCode == 10) {
-        words.push(word);
-        word = "";
+      words.push(word);
+      word = "";
     }
 
     word = word + line.charAt(i);
@@ -96,16 +107,13 @@ function addLine(line) {
         }
       }
       
-      
       var chordEl = $("<span><span class='chord'>" + thisword.trim() + "</span></span>");
-
-
+      chordEl.find(".chord").attr("bar",chordCount);
+      chordCount++;
 
       if(spacecount > 4) {
         chordEl.find(".chord").append("<span class='dots'><span class='dot'/><span class='dot'/><span class='dot'/><span class='dot'/></dots>");
-        
       }
-
 
       line.html(line.html() + chordEl.html() + "<span class='spaces'>" + spaces + "</span>");
     }
@@ -115,7 +123,6 @@ function addLine(line) {
       var thisword = words[i];
       line.html(line.html() + thisword);
     }
-
   }
 
   
@@ -124,13 +131,7 @@ function addLine(line) {
   
 }
 
-
-
-
-
 function tick(){
-
-  // var lineEl = $(".result .chords").eq(line - 1);
 
   var barEl = $(".chord").eq(bar - 1);
 

@@ -4,7 +4,7 @@
 
 html {
   font-family: "Fira Sans", "Helvetica Neue", "Arial", sans-serif;
-  font-family: 'Cutive Mono', monospace;
+  // font-family: 'Cutive Mono', monospace;
   font-family: 'Roboto Mono', monospace;
 }
 
@@ -118,11 +118,22 @@ h2 {
   display: none;
 }
 
+pre {
+  letter-spacing: -1px;
+}
+
 pre.chords {
   margin: 35px 0 5px 0;
   font-weight: bold;
+  transition: background .15s ease-out;
+  border-radius: 3px;
 
   &.current {
+    background: #EFEFEF;
+  }
+  
+  &:hover {
+    cursor: pointer;
     background: #EFEFEF;
   }
 }
@@ -136,13 +147,11 @@ pre.chords {
 }
 
 .chord {
-
   display: inline-block !important;
   border-radius: 3px;
-  
 
   &.current {
-    animation: pop .2s;
+    // animation: pop .2s;
     background: DeepSkyBlue;
     color: white;
 
@@ -188,9 +197,13 @@ pre.chords {
   background: #CCC;
   left: -5px;
   
+  
+  &:first-child {
+    // display: none;
+  }
   &.current {
     background: DeepSkyBlue;
-    transform: scale(1.25);
+    transform: scale(1.5);
   }
 
 }
