@@ -1,29 +1,95 @@
+@import url('https://fonts.googleapis.com/css?family=Cutive+Mono');
+
 html {
   font-family: "Fira Sans", "Helvetica Neue", "Arial", sans-serif;
+  font-family: 'Cutive Mono', monospace;
 }
 
 body {
-  background: #DDD;
-  padding: 40px;
+  padding: 20px 20px 400px 20px;
+  font-size: 22px;
+  font-weight: bold;
 }
 
 .page-wrapper {
   background: white;
   margin: 0 auto;
-  max-width: 1000px;
-  padding: 40px;
-  box-shadow: 0 1px 1px rgba(0,0,0,.15);
 }
 
 
 // Probably want to drop in some media query stuff too... narrow css?
-
 // Animation Example
 
 .animation-example {
   animation: sampleAnimation .4s ease-out;
   animation-iteration-count: 3;
   animation-delay: .5s;
+}
+
+.ui {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  
+  a {
+    background: #76bc2b;
+    color: white;
+    font-size: 40px;
+    display: block;
+    text-decoration: none;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    position: relative;
+    transition: opacity .1s ease-out;
+    
+    &:hover {
+      opacity: .8;
+    }
+    
+    .fa-pause {
+      display: block;
+      left: 0px;
+    }
+    
+    .fa-play {
+      display: none;
+    }
+    
+    &.paused {
+      .fa-pause {
+        display: none;
+      }
+      
+      .fa-play {
+        display: block;
+      }
+    }
+    
+    
+    
+    span {
+      position: absolute;
+      width: 100%;
+      top: 20px;
+      left: 4px;
+      text-align: center;
+      display: block;
+      color: white;
+    }
+  }
+  
+}
+
+
+h1 {
+  font-size: 2em;
+  margin: 0em 0em .2em 0;
+}
+
+h2 {
+  margin: 0 0 2em 0;
+  opacity: .7;
 }
 
 @keyframes sampleAnimation {
@@ -40,3 +106,86 @@ body {
     opacity: 0;
   }
 }
+
+
+
+.source {
+  display: none;
+}
+
+pre.chords {
+  margin: 20px 0 8px 0;
+  font-weight: bold;
+}
+
+.chord {
+ padding: 3px 5px;
+ position: relative;
+ left: -5px;
+ text-align:center;
+}
+
+.chord {
+
+  display: inline-block !important;
+  border-radius: 3px;
+  
+
+  &.current {
+    animation: pop .2s;
+    background: DeepSkyBlue;
+    color: white;
+
+  }
+
+  @keyframes pop {
+    0% { transform: scale(1);}
+    40% { transform: scale(1.2);}
+    100% { transform: scale(1);}
+  }
+  
+}
+
+.lyrics {
+  opacity: .5;
+}
+
+.chord {
+  position: relative;
+}
+
+.dots {
+  position: absolute;
+  top: 13px;
+  opacity: 0;
+  right: -75px;
+  
+}
+
+.current .dots {
+  opacity: 1;
+}
+
+.dot {
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  background: black;
+  border-radius: 50%;
+  position: relative;
+  top: -3px;
+  margin: 0 4px;
+  background: #ddd;
+  left: -5px;
+  
+  &.current {
+    background: DeepSkyBlue;
+    transform: scale(1.25);
+  }
+
+}
+
+.spaces {
+  background: white;
+}
+  
