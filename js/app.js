@@ -4,6 +4,8 @@ var chordNames = ["G","Am","C", "Fmaj7"];
 var playing = false;
 
 $(document).ready(function(){
+
+  
   
   var jam = $("pre").html();
   
@@ -159,12 +161,12 @@ function scroll() {
 
   var currentScroll = window.pageYOffset;
   
-  if(top > 400 && scrolling == false) {
+  if(top > (window.innerHeight - 200)  && scrolling == false) {
 
     scrolling = true;
     
     $('html, body').animate({
-      scrollTop: currentScroll + 400
+      scrollTop: currentScroll + top
      }, 1000, function(){
        scrolling = false;
      });
