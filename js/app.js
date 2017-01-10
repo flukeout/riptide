@@ -141,6 +141,8 @@ function tick(){
   beatEl = barEl.find(".dot").eq(beat - 1);
   beatEl.addClass("current");
   
+  barEl.closest(".chords").addClass("current");
+  
   beat++;
   
   if(beat > 4) {
@@ -166,7 +168,7 @@ function scroll() {
     scrolling = true;
     
     $('html, body').animate({
-      scrollTop: currentScroll + top
+      scrollTop: currentScroll + top - 10
      }, 1000, function(){
        scrolling = false;
      });
