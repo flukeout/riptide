@@ -5,12 +5,11 @@ html {
   font-family: "Fira Sans", "Helvetica Neue", "Arial", sans-serif;
   // font-family: 'Cutive Mono', monospace;
   // font-family: 'Roboto Mono', monospace;
-  font-family: "Lato", sans-serif;  
+  // font-family: "Lato", sans-serif;
 }
 
 body {
   padding: 40px 60px 400px 60px;
-  font-size: 26px;
   font-weight: 400;
   background: black;
 }
@@ -174,18 +173,6 @@ pre.chords {
   border-radius: 3px;
 
   &.current {
-    &.pop {
-      // animation: boom ease-out .2s;
-    }
-  
-    @keyframes boom {
-
-
-      0% { transform: scale(1); opacity: 1;}
-      5% { transform: scaleY(1.25);}
-      100% { transform: scale(1);}
-    }
-
     background: DeepSkyBlue;
     color: white;
   }
@@ -301,7 +288,7 @@ pre.chords {
   // }
 
   &.popa {
-    animation: popa ease-out .2s;
+    // animation: popa ease-out .2s;
   }
   
   @keyframes popa {
@@ -340,4 +327,86 @@ pre.chords {
     100% { transform: scale(1);}
   }
   
+}
+
+@barwidth: 250px;
+
+.bar {
+  text-align: left;
+  width: 250px;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.chords {
+  margin-top: 30px;
+  font-size: 22px;
+
+  .bar {
+    background: rgba(255,255,255,.2);
+    font-weight: bold;
+    border-radius: 22px;
+    padding: 12px 0;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    transform: scale(1) rotateZ(0);
+    
+    &.slam.current {
+      animation: boom ease-out .2s;
+    }
+  
+    @keyframes boom {
+      0% { transform: scale(1); opacity: 1;}
+      5% { transform: scaleY(1.25);}
+      100% { transform: scale(1);}
+    }
+    // border: solid 2px transparent;
+    
+  }
+
+  .chord-name {
+    top: 0;
+    left: 5px;
+    text-align: center;
+    padding: 5px 15px 6px 12px;
+    border-radius: 25px;
+    z-index: 2;
+    position: relative;
+  }
+  
+  .current .chord-name {
+    // background: DeepSkyBlue;
+  }
+
+  .progress {
+    background: white;
+    position: absolute;
+    opacity: .5;
+    width: 0%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transition: width .320s linear;
+    background: DeepSkyBlue;
+    z-index: 1;
+  }
+  
+ 
+  .current {
+    position: relative;
+  }
+  
+  .current .progress {
+    opacity: 1;
+  }
+
+
+ 
+  
+}
+
+.lyrics {
+  margin-top: 8px;
+  font-size: 20px;
 }
