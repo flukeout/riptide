@@ -419,12 +419,16 @@ function tick(){
   beatcount = 4;
 
   progressEl = barEl.find(".progress");
+
+  if(beat == 1) {
+    progressEl.css("width", "100%");
+  }
   
   // progressEl.hide();
 
-  var percent = beat/beatcount * 100;
-
-  progressEl.css("width", percent + "%");
+  // var percent = beat/beatcount * 100;
+  //
+  // progressEl.css("width", percent + "%");
 
   barEl.closest(".chords").addClass("current");
 

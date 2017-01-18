@@ -188,32 +188,6 @@ pre.chords {
   position: relative;
 }
 
-.length {
-  position: absolute;
-  top: 13px;
-  display: inline-block;
-  width: 60px;
-  height: 8px;
-  // height: 33px;
-  // top: 0;
-
-  background: rgba(255,255,255,.2);
-  background: #555;
-  opacity: 0;
-  border-radius: 3px;
-  // display: none;
-
-  .progress {
-    border-radius: 3px;
-    background: DeepSkyBlue;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 100%;
-  }
-}
-
 .chord.current .length {
   opacity: 1;
 }
@@ -342,18 +316,22 @@ pre.chords {
   margin-top: 30px;
   font-size: 22px;
 
+
   .bar {
-    background: rgba(255,255,255,.2);
     font-weight: bold;
-    border-radius: 22px;
+    border-radius: 0;
     padding: 12px 0;
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
+    // border-left: solid 4px rgba(255,255,255,.2);
+    
     transform: scale(1) rotateZ(0);
+    background: transparent;
     
     &.slam.current {
       animation: boom ease-out .2s;
+      
     }
   
     @keyframes boom {
@@ -363,16 +341,20 @@ pre.chords {
     }
     // border: solid 2px transparent;
     
+    &.current {
+      // background: rgba(255,255,255,.1);
+    }
+    
   }
 
   .chord-name {
-    top: 0;
-    left: 5px;
-    text-align: center;
-    padding: 5px 15px 6px 12px;
-    border-radius: 25px;
-    z-index: 2;
-    position: relative;
+    // top: 0;
+    // left: 5px;
+    // text-align: center;
+    // padding: 5px 15px 6px 12px;
+    // border-radius: 25px;
+    // z-index: 2;
+    // position: relative;
   }
   
   .current .chord-name {
@@ -382,12 +364,12 @@ pre.chords {
   .progress {
     background: white;
     position: absolute;
-    opacity: .5;
+    opacity: .3;
     width: 0%;
-    height: 100%;
-    top: 0;
+    height: 5px;
+    bottom: 0px;
     left: 0;
-    transition: width .320s linear;
+    transition: width 1.28s linear;
     background: DeepSkyBlue;
     z-index: 1;
   }
