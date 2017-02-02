@@ -2,15 +2,15 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,700');
 @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
 html {
-  font-family: "Fira Sans", "Helvetica Neue", "Arial", sans-serif;
+  // font-family: "Fira Sans", "Helvetica Neue", "Arial", sans-serif;
   // font-family: 'Cutive Mono', monospace;
   // font-family: 'Roboto Mono', monospace;
-  // font-family: "Lato", sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 body {
   padding: 40px 60px 400px 60px;
-  font-weight: 400;
+  font-weight: 300;
   background: black;
 }
 
@@ -34,7 +34,7 @@ body {
   top: 20px;
   right: 20px;
   z-index: 99999;
-  
+
   a {
     background: #76bc2b;
     color: white;
@@ -46,32 +46,32 @@ body {
     height: 80px;
     position: relative;
     transition: opacity .1s ease-out;
-    
+
     &:hover {
       opacity: .8;
     }
-    
+
     .fa-pause {
       display: block;
       left: 0px;
     }
-    
+
     .fa-play {
       display: none;
     }
-    
+
     &.paused {
       .fa-pause {
         display: none;
       }
-      
+
       .fa-play {
         display: block;
       }
     }
-    
-    
-    
+
+
+
     span {
       position: absolute;
       width: 100%;
@@ -82,7 +82,7 @@ body {
       color: white;
     }
   }
-  
+
 }
 
 
@@ -94,6 +94,7 @@ h1 {
 h2 {
   margin: 0 0 2em 0;
   opacity: .7;
+  font-size: 22px;
 }
 
 @keyframes sampleAnimation {
@@ -120,11 +121,11 @@ pre {
 }
 
 hr {
-  margin-top: 50px;
-  margin-bottom: 50px;
-  opacity: .25;
+  margin: 50px auto;
   border: none;
-  border-top: solid 3px white;
+  width: 70%;
+  border-top: dashed 3px white;
+  opacity: .2;
   position: relative;
   top: 5px;
 }
@@ -138,50 +139,36 @@ pre.chords {
   &.current {
     background: rgba(255,255,255,.2);
   }
-  
+
 
   &.hit {
     // animation: slam ease-out .2s;
   }
 
   @keyframes slam {
-    0% { 
+    0% {
       transform: scale(1);
     }
     10% { transform: scaleY(1.2);}
     100% { transform: scale(1);}
   }
-  
-  
+
   &:hover {
     cursor: pointer;
     background: rgba(255,255,255,.2);
   }
 }
 
-.chord {
- padding: 3px 5px 5px 5px;
-
- position: relative;
- margin-left: -5px;
- text-align:center;
- font-weight: 700;
-}
-
-.chord {
-  display: inline-block !important;
-  border-radius: 3px;
-
-  &.current {
-    background: DeepSkyBlue;
-    color: white;
-  }
-}
-
 .lyrics {
   opacity: .5;
   min-height: 24px;
-  margin-bottom: 40px;
+  margin: 12px 0 40px 0;
+  padding-left: 10px;
+  font-size: 20px;
+
+  .bar {
+    padding-bottom: 3px;
+  }
 }
 
 .chord {
@@ -220,9 +207,9 @@ pre.chords {
   display: none;
 
   @keyframes bounce {
-    0% { 
+    0% {
       transform: translateY(0px) scaleY(.85) scaleX(1.25);
-      
+
       animation-timing-function: ease-out;
     }
     50% {
@@ -230,8 +217,8 @@ pre.chords {
       animation-timing-function: ease-in;
     }
   }
-  
-  
+
+
 }
 
 
@@ -240,7 +227,7 @@ pre.chords {
   top: 12px;
   opacity: 0;
   right: -60px;
-  
+
 }
 
 .dot {
@@ -256,7 +243,7 @@ pre.chords {
   left: ~"calc(50% - 8px)";
   opacity: 1;
   // display: none;
-  
+
   // &:nth-child(3) {
   //   display: inline-block;
   // }
@@ -264,13 +251,13 @@ pre.chords {
   &.popa {
     // animation: popa ease-out .2s;
   }
-  
+
   @keyframes popa {
     0% { transform: scale(1.5);}
     100% { transform: scale(1);}
   }
-  
-  
+
+
   &.current {
     background: DeepSkyBlue;
     opacity: 1;
@@ -278,87 +265,57 @@ pre.chords {
 
 }
 
-  
-  
-.metronome {
-  position: fixed;
-  top: 20px;
-  right: 120px;
-  z-index: 99999;
-  width: 80px;
-  height: 80px;
-  background: white;
-  border-radius: 50%;
-  opacity: .6;
-  
-  &.hit {
-    animation: pop ease-out .2s;
-  }
-  
-  @keyframes pop {
-    0% { transform: scale(1); opacity: 1;}
-    10% { transform: scale(1.2);}
-    100% { transform: scale(1);}
-  }
-  
-}
 
 @barwidth: 250px;
 
+// Wraps both chords and lyrics bars
 .bar {
-  text-align: left;
-  width: 250px;
+  box-sizing: border-box;
+  position: relative;
+  width: 25%;
   display: inline-block;
-  margin-right: 5px;
 }
 
 .chords {
   margin-top: 30px;
-  font-size: 22px;
+  font-size: 0;
 
+  .chord-circle {
+    height: 50px;
+    width: 50px;
+    background: rgba(255,255,255,.2);
+    color: white;
+    border-radius: 25px;
+    font-size: 22px;
+    font-weight: 500;
+  }
 
-  .bar {
-    font-weight: bold;
-    border-radius: 0;
-    padding: 12px 0;
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
-    // border-left: solid 4px rgba(255,255,255,.2);
-    
-    transform: scale(1) rotateZ(0);
-    background: transparent;
-    
-    &.slam.current {
-      animation: boom ease-out .2s;
-      
-    }
-  
+  .bar.current .chord-circle {
+    background: deepskyblue;
+    animation: boom .2s ease-out;
+
     @keyframes boom {
-      0% { transform: scale(1); opacity: 1;}
-      5% { transform: scaleY(1.25);}
+      0% { transform: scale(1);}
+      5% { transform: scale(1.15);}
       100% { transform: scale(1);}
     }
-    // border: solid 2px transparent;
-    
-    &.current {
-      // background: rgba(255,255,255,.1);
-    }
-    
   }
 
   .chord-name {
-    // top: 0;
-    // left: 5px;
-    // text-align: center;
-    // padding: 5px 15px 6px 12px;
-    // border-radius: 25px;
-    // z-index: 2;
-    // position: relative;
+    text-align: center;
+    position: relative;
+    top: 14px;
+    font-weight: 300;
   }
-  
-  .current .chord-name {
-    // background: DeepSkyBlue;
+
+  .progress-bar {
+    height: 6px;
+    width: ~"calc(100% - 50px)";
+    position: relative;
+    background: rgba(255,255,255,.2);
+    position: absolute;
+    top: 22px;
+    right: 0;
   }
 
   .progress {
@@ -366,29 +323,32 @@ pre.chords {
     position: absolute;
     opacity: .3;
     width: 0%;
-    height: 5px;
-    bottom: 0px;
+    height: 100%;
     left: 0;
     transition: width 1.28s linear;
     background: DeepSkyBlue;
     z-index: 1;
+    opacity: 0;
   }
-  
- 
+
   .current {
     position: relative;
   }
-  
+
+  .bar.current .progress {
+    opacity: 1;
+  }
+
   .current .progress {
     opacity: 1;
   }
 
 
- 
-  
+
+
 }
 
-.lyrics {
-  margin-top: 8px;
-  font-size: 20px;
+
+pre {
+  display: none;
 }

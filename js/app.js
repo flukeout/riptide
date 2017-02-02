@@ -1,4 +1,18 @@
-var chordNames = ["G","Am","C", "Fmaj7", "Em", "D"];
+var chordNames = [
+  "A",
+  "Am",
+  "Bb",
+  "C",
+  "D",
+  "Dm",
+  "E",
+  "Em",
+  "F",
+  "Fm",
+  "Fmaj7",
+  "G",
+  "Gm"
+];
 
 var playing = false;
 
@@ -6,11 +20,14 @@ var line = "";
 
 var bar = 1;
 var beat = 1;
-var interval = 320;
-var beatcount = 4;
-var countin = 0; //8 usually
 
+var interval = 320;
+var bpm = 128;
+
+var beatcount = 4;
+var countin = 0; //8 usually - adds the ticks
 var lines = [];
+
 
 $(window).on("scroll",function(){
   if(scrolling == false) {
@@ -18,6 +35,7 @@ $(window).on("scroll",function(){
   }
 })
 
+// Handle spacebar pause / play
 $(document).on("keypress",function(e){
   if(e.keyCode == 32) {
     if(playing) {
@@ -31,8 +49,11 @@ $(document).on("keypress",function(e){
 
 $(document).ready(function(){
 
-  var jam = $("pre").html();
+  $("pre").load("./songs/riptide.txt",function(){
+    loadSong();
+  });
 
+  // toggle start / stop clicks
   $(".ui").on("click","a",function(){
     if(playing) {
       pause();
@@ -41,73 +62,6 @@ $(document).ready(function(){
     }
     return false;
   })
-
-  for(var i = 0; i < jam.length; i++) {
-    
-    if(jam.charCodeAt(i) == 10) {
-      
-      lines.push({
-        content : line,
-        type : false,
-      })
-
-      line = "";
-    } else {
-      line = line + jam.charAt(i);
-    }
-    
-    
-    
-  }
-
-
-  for(var i = 0; i < lines.length; i++) {
-    var thisLine = lines[i];
-
-    thisLine.words = getWords(thisLine.content);
-    thisLine.type = getType(thisLine.words);
-    
-    if(thisLine.type == "chords") {
-      thisLine.bars = getChords(thisLine.words);
-    }
-  }
-
-  // Separates each Lyric line into bars based on previous chords line
-  for(var i = 0; i < lines.length; i++) {
-    var thisLine = lines[i];
-    var prevLine = lines[i-1] || false;
-    
-    if(thisLine.type == "lyrics" && prevLine.type == "chords") {
-
-      thisLine.bars = [];
-      
-      for(var j = 0; j < prevLine.bars.length; j++) {
-        
-        var bar = prevLine.bars[j];
-        var nextBar = prevLine.bars[j+1] || false;
-        
-        var starts = bar.startsAt;
-        var end = nextBar.startsAt || 9999999999;
-        
-        thisLine.bars.push(thisLine.content.substring(starts,end));
-      }
-    }
-  }
-  
-
-  
-  for(var i = 0; i < lines.length; i++) {
-    var thisLine = lines[i];
-    console.log(thisLine.type);
-
-    if(thisLine.type == "chords" || thisLine.type == "lyrics") {
-      newAddLine(thisLine);
-    } else {
-       $(".result").append("<hr/>");
-    }
-  }
-  
-  
 
   $(".chords").on("click",function(){
     pause();
@@ -122,13 +76,103 @@ $(document).ready(function(){
     if(playing) {
       tick();
     }
-  }, 320);  // 102bpm   60,000 / 102 = 588 (/2)
-  //294
-  // 102 BPM
+  }, interval);
 
 });
 
+function setVariable(name,val){
 
+  // Just setting content here
+  if(["artist","title"].indexOf(name) > -1) {
+    $(".var-" + name).text(val);
+  }
+
+}
+
+function loadSong() {
+
+  var jam = $("pre").html();
+
+  for(var i = 0; i < jam.length; i++) {
+
+    if(jam.charCodeAt(i) == 10) {
+
+      // Detect if we've got a variable, and handle that...
+      if(line.charAt(0) == "#") {
+
+        var variableData = line.replace("#","").split(":");
+        var varName = variableData[0];
+        var value = variableData[1].trim();
+        setVariable(varName,value);
+
+      } else {
+
+        // Otherwise push it into the content
+
+        lines.push({
+          content : line,
+          type : false,
+        })
+      }
+
+      line = "";
+    } else {
+      line = line + jam.charAt(i);
+    }
+  }
+
+  for(var i = 0; i < lines.length; i++) {
+    var thisLine = lines[i];
+
+    thisLine.words = getWords(thisLine.content);  // Separates line into separate words
+    thisLine.type = getType(thisLine.words);      // Figures out the type
+
+    if(thisLine.type == "chords") {
+      thisLine.bars = getChords(thisLine.words);
+    }
+  }
+
+  for(var i = 0; i < lines.length; i++) {
+    var thisLine = lines[i];
+    var prevLine = lines[i-1] || false;
+
+    if(thisLine.type == "lyrics" && prevLine.type == "chords") {
+
+      thisLine.bars = [];
+
+      for(var j = 0; j < prevLine.bars.length; j++) {
+
+        var bar = prevLine.bars[j];
+        var nextBar = prevLine.bars[j+1] || false;
+
+        var starts = bar.startsAt;
+        var end = nextBar.startsAt || 9999999999;
+
+        thisLine.bars.push(thisLine.content.substring(starts,end));
+      }
+    }
+  }
+
+
+
+  var linesAdded = 0;
+
+  for(var i = 0; i < lines.length; i++) {
+    var thisLine = lines[i];
+
+    if(linesAdded == 0 && thisLine.type == "break") {
+      continue;
+    }
+
+    if(thisLine.type == "chords" || thisLine.type == "lyrics") {
+      newAddLine(thisLine);
+    } else {
+       $(".result").append("<hr/>");
+    }
+    linesAdded++;
+  }
+
+}
 
 function newAddLine(line) {
 
@@ -137,16 +181,22 @@ function newAddLine(line) {
     for(i = 0; i < line.bars.length; i++) {
 
       thisBar = line.bars[i];
-      
+
       if(line.type == "chords") {
-        var chordEl = $(`<span>
-                          <span class='bar chord'>
-                            <span class='chord-name'>` + thisBar.chord + `</span>
-                            <span class='progress'></span>
-                          <span/>
-                         </span>`);
+        var chordEl = $(
+          `<div>
+            <div class='bar chord'>
+              <div class='chord-circle'>
+                <div class='chord-name'>` + thisBar.chord + `</div>
+              </div>
+              <div class='progress-bar'>
+                <div class='progress'></div>
+              </div>
+            <div/>
+           </div>`
+        );
       } else {
-        var chordEl = $("<span><span class='bar'>" + thisBar + "</span></span>");        
+        var chordEl = $("<div><div class='bar'>" + thisBar + "</div></div>");
       }
 
       // chordEl.find(".chord").attr("bar",chordCount).attr("beats", beatCount);
@@ -155,18 +205,13 @@ function newAddLine(line) {
       // chordEl.find(".length").css("right",-1 * spacecount * 14 + 6);
       // chordEl.find(".progress").css("transition","width linear ." + interval + "s");
       //
+
       lineEl.html(lineEl.html() + chordEl.html());
-
     }
-    
- 
 
-  
     lineEl.addClass(line.type);
-  
+
   $(".result").append(lineEl);
-  // line.addClass(type);
-  
 }
 
 // Builds bars from line of chordsx
@@ -184,7 +229,7 @@ function getChords(words) {
         startsAt : index
       })
     }
-    
+
     index = index + thisWord.length;
   }
   return chords;
@@ -207,11 +252,11 @@ function getWords(line) {
     }
     word = word + line.charAt(i);
   }
-  
+
   if(word.lenght != 0) {
     words.push(word);
   }
-  
+
   return words;
 }
 
@@ -221,7 +266,6 @@ function getWords(line) {
 
 function getType(words) {
 
-  
 
   var type = "chords";
 
@@ -237,7 +281,7 @@ function getType(words) {
   if(words.length == 1 && words[0] == ""){
     type = "break"
   }
-  
+
   return type;
 }
 
@@ -256,135 +300,6 @@ function start() {
 
 var chordCount = 1;
 
-function addLine(line) {
-
-  var lineLength = 0;
-  var words = [];
-
-  var word = "";
-  var spaces = "";
-  var currentType = "blank";
-  var lineData = [];
-
-  for(var i = 0; i < line.length; i++) {
-    var prevCharCode = line.charCodeAt(i-1) || false;
-    var thisCharCode = line.charCodeAt(i);
-    
-    if((thisCharCode != 32 && prevCharCode == 32) || thisCharCode == 10 || (thisCharCode == 32 && prevCharCode != 32)) {
-      if(word.length > 0) {
-        words.push(word);
-        
-        if(chordNames.indexOf(word) > -1) {
-          lineData.push({
-            chord: word,
-            position: i
-          })
-        }
-      }
-
-      word = "";
-    }
-    word = word + line.charAt(i);
-  }
-  
-  var type = "chords";
-
-  var line = $("<pre/>");
-
-  for(i = 0; i < words.length; i++) {
-    var thisword = words[i];
-    thisword = thisword.replace(".","").trim();
-    if(chordNames.indexOf(thisword) < 0 && thisword.length > 0) {
-      type = "lyrics";
-    }
-  }
-
-  if(words.length == 0){
-    type = "break"
-  }
-
-
-  if(type == "chords") {
-
-    for(i = 0; i < words.length; i++) {
-
-      var thisword = words[i];
-      var beatCount = 4;
-      var spaces = "";
-
-      
-      var nextword = words[i+1] || "";
-      var spacecount = 0;      
-      for(j = 0; j < nextword.length; j++) {
-        if(nextword.charCodeAt(j) == 32) {
-          spacecount++;
-        }
-      }
-      
-      var allspaces = true;
-
-      for(j = 0; j < thisword.length; j++) {
-        if(thisword.charCodeAt(j) == 32) {
-          spaces = spaces + thisword.charAt(j);
-          spacecount++;
-        } else {
-          allspaces = false;
-        }
-      }
-      
-      
-      if(!allspaces) {
-        var chordEl = $("<span><span class='chord'>" + thisword.trim().replace("."," ") + "</span></span>");
-        chordEl.find(".chord").attr("bar",chordCount).attr("beats", beatCount);
-
-        chordCount++;
-        chordEl.find(".chord").append("<span class='ball'/>");
-        
-        // if(spacecount > 4) {
-
-          // New - progress
-          chordEl.find(".chord").append("<span class='length'><span class='dot'/><span class='progress'/></span>");
-          
-          chordEl.find(".length").css("width",(spacecount * 14) - 15);
-          chordEl.find(".length").css("right",-1 * spacecount * 14 + 6);
-          chordEl.find(".progress").css("transition","width linear ." + interval + "s");
-
-          // Old..
-          // chordEl.find(".chord").append("<span class='dots'><span class='dot'/></span>");
-
-          // chordEl.find(".dots").css("left", spacecount/2 * 14 + 15 );
-          // for(var j = 0; j < beatCount; j++) {
-          //   chordEl.find(".dots").append("<span class='dot'/>")
-          // }
-          // -- add dots
-        // }
-
-        line.html(line.html() + chordEl.html());  
-      } 
-
-      line.html(line.html() + "<span class='spaces'>" + spaces + "</span>");  
-    }
-    
-  } else if (type=="lyrics") {
-
-    for(i = 0; i < words.length; i++) {
-      var thisword = words[i];
-      line.html(line.html() + thisword);
-    }
-    
-  } else if (type == "break"){
-    line.html("<hr/>");
-  }
-
-  
-  
-  
-  $(".result").append(line);
-  line.addClass(type);
-  
-}
-
-
 
 function tick(){
 
@@ -394,19 +309,19 @@ function tick(){
     }
     countin--;
     return;
-  } 
-    
+  }
+
   var barEl = $(".chord").eq(bar - 1);
 
   // $(".current").removeClass("current");
-  
+
   // $(".chords").removeClass("current");
   $(".chord").removeClass("current");
 
   barEl.addClass("current");
 
   // beatEl = barEl.find(".dot");
-  
+
   if(beat == 3 || beat == 1) {
     // barEl.removeClass("slam");
     // barEl.width(barEl.width());
@@ -423,7 +338,7 @@ function tick(){
   if(beat == 1) {
     progressEl.css("width", "100%");
   }
-  
+
   // progressEl.hide();
 
   // var percent = beat/beatcount * 100;
@@ -463,7 +378,7 @@ function scroll() {
   var top = viewportOffset.top;
 
   var currentScroll = window.pageYOffset;
-  
+
   // When it gets low on the page, or is above the viewable part of the screen
   if((top < 0 || top > (window.innerHeight - 220)) && scrolling == false) {
     scrolling = true;
